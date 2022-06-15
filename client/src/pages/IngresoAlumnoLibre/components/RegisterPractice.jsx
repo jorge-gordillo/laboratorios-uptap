@@ -2,28 +2,38 @@ import { useState } from "react"
 import useData from "../../../hooks/useData"
 import { Button, TextField, Box, FormControl, InputLabel, Select, MenuItem, Autocomplete, Snackbar, Alert } from "@mui/material"
 
-const RegisterPratice = () => {
-	const { equipments, programs, scheduleActive, entryAlumnPractice, message } = useData()
+const RegisterPractice = () => {
+   const { equipments, programs, entryAlumnPractice, message } = useData()
 
 	const [enrollment, setEnrollment] = useState('')
 	const [equipment, setEquipment] = useState("")
    const [program, setProgram] = useState(null)
-	const [schedule, setSchedule] = useState('')
-	
-	const handleEntry = async () => {
+   
+   const handleEntry = async () => {
 		const response = await entryAlumnPractice({
-			enrollment, equipment, schedule, program: program.id
+			enrollment, equipment, program: program.id
 		})
 		if (response.status == 201) {
 			setEnrollment('')
 			setEquipment('')
 			setProgram(null)
-			setSchedule('')
 		}
-	}
+   }
 
+   // matricula
+   // equipo
+   // programa
+   // laboratorio
+
+   // teacher
+   // equipo
+   // prgrama
+   // laboratorio
+   
+
+   
    return (
-		<Box sx={{ mt: 2, display: "flex", flexDirection: "row" }}>
+      <Box sx={{ mt: 2, display: "flex", flexDirection: "row" }}>
 			<TextField
 				id="outlined-basic"
 				label="Matricula"
@@ -32,22 +42,6 @@ const RegisterPratice = () => {
 				value={enrollment}
 				onChange={({target}) => setEnrollment(target.value)}
          />
-			
-			<FormControl sx={{ mx: 1.5, minWidth: 100 }}>
-				<InputLabel id="materia-label">Materia</InputLabel>
-				<Select
-					labelId="materia-label"
-					value={schedule}
-					label="Materia"
-					onChange={({ target }) => setSchedule(target.value)}
-				>					
-					{scheduleActive?.map((schedule) => (
-						<MenuItem key={schedule.id} value={schedule.id}>
-							{schedule.subject}
-						</MenuItem>
-					))}
-				</Select>
-			</FormControl>
 
 			<FormControl sx={{ mx: 1.5, minWidth: 100 }}>
 				<InputLabel id="equipo-label">Equipo</InputLabel>
@@ -83,7 +77,7 @@ const RegisterPratice = () => {
 
 			<Button
 				variant="contained"
-				disabled={enrollment && equipment && program && schedule ? false : true}
+				disabled={enrollment && equipment && program ? false : true}
 				onClick={handleEntry}
 				sx={{
 					mx: 1.5,
@@ -105,7 +99,7 @@ const RegisterPratice = () => {
 				</Alert>
 			</Snackbar>
 		</Box>
-	)
+   )
 }
 
-export default RegisterPratice
+export default RegisterPractice

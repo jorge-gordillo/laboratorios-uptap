@@ -1,8 +1,14 @@
+import { Box } from "@mui/material"
+import TablePratices from "./components/TablePratices"
+import RegisterPractice from "./components/RegisterPractice"
+
 const IngresoAlumnoLibre = () => {
    return (
-      <div>
-         <h1>Ingreso AlumnoLibre Page</h1>
-      </div>
+      <Box sx={{ ml:1.5, pt:1.5}}>
+         <h2>Ingreso Alumno Libre</h2>
+         <RegisterPractice />
+         <TablePratices />
+      </Box>
    )
 }
 

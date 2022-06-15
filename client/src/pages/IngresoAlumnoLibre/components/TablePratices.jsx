@@ -1,21 +1,20 @@
-import { useMemo } from 'react'
-import DataGrid from '../../../components/DataGrid'
+import { useMemo } from "react"
 import { Button, Snackbar, Alert } from "@mui/material"
-import useData from '../../../hooks/useData'
+import DataGrid from '../../../components/DataGrid'
+import useData from "../../../hooks/useData"
 
 const TablePratices = () => {
-	const { alumnPractices, exitAlumnPractice, message } = useData()
+   const { message, exitAlumnPractice, alumnPractices } = useData()
 
-	const handleExit = async (params) => {
-		await exitAlumnPractice(params)
-	}
+   const handleExit = async (params) => {
+      await exitAlumnPractice(params)
+   }
 
-	const columns = useMemo(() => [
+   const columns = useMemo(() => [
 		{ field: "enrollment", headerName: "Matricula" },
 		{ field: "name", headerName: "Nombre", minWidth: 240 },
 		{ field: "equipment", headerName: "Equipo", minWidth: 130, valueGetter: ({ row }) => row.equipment == 'Equipo propio' ? `${row.equipment}` : `${row.equipment.number}` },
 		{ field: "program", headerName: "Programa", minWidth: 220, valueGetter: ({ row }) => `${row.program.name}` },
-		// { field: "schedule", headerName: "Materia", minWidth: 220, valueGetter: ({ row }) => `${row.schedule.name}` },
 		{ field: "entry_date", headerName: "Hora de Entrada", minWidth: 125 },
 		{ field: "exit_date", headerName: "Hora de Salida", minWidth: 125 },
 		{ field: "actions", headerName: 'Acciones', type: "actions", minWidth: 110,
@@ -31,17 +30,17 @@ const TablePratices = () => {
 			]
 		}
 	])
-   
+
    return (
       <div style={{ display: 'flex' }}>
-         <div style={{ flexGrow: 1 }}>
+         <div style={{ flexGrow: 1}}>
             <DataGrid
                sx={{ mt: 2, mr: 2 }}
-               rows={alumnPractices?.filter(item => item.schedule !== null) ?? []}
+               rows={alumnPractices?.filter(item => item.schedule === null) ?? []}
                columns={columns}
             />
          </div>
-			<Snackbar
+         <Snackbar
 				anchorOrigin={{ vertical: 'bottom', horizontal: 'right',}}
 				open={message.open}
 			>

@@ -115,9 +115,8 @@ class AlumPratices(Model):
    entry_date = DateTimeField(auto_now_add=True, verbose_name='Fecha de entrada')
    exit_date = DateTimeField(auto_now=False, blank=True, null=True, default=None, verbose_name='Fecha de salida')
    equipment = ForeignKey(EquipmentGeneral, null=True, blank=True, default=None, on_delete=CASCADE, verbose_name='Equipo')
-   schedule = ForeignKey(Schedule, null=True, blank=True, on_delete=CASCADE, verbose_name='Horario')
+   schedule = ForeignKey(Schedule, null=True, blank=True, default=None, on_delete=CASCADE, verbose_name='Horario')
    laboratory = ForeignKey(Laboratory, unique=False, null=False, default=1, on_delete=CASCADE, verbose_name='Laboratorio')
-   # description = CharField()
    program = ForeignKey(Program, null=True, blank=True, on_delete=CASCADE, verbose_name='Programa')
 
    class Meta:
@@ -131,10 +130,11 @@ class TeacherPratces(Model):
    teacher = ForeignKey(Teacher, unique=False, on_delete=CASCADE, verbose_name='Docente')
    entry_date = DateTimeField(auto_now_add=True, editable=False, verbose_name='Fecha de entrada')
    exit_date = DateTimeField(auto_now=False, blank=True, null=True, default=None, verbose_name='Fecha de salida')
-   description = CharField(max_length=250, verbose_name='Descripción de la practica')
-   schedule = ForeignKey(Schedule, null=True, blank=True, on_delete=CASCADE, verbose_name='Horario')
+   description = CharField(max_length=250, null=True, blank=True, default=None, verbose_name='Descripción de la practica')
+   schedule = ForeignKey(Schedule, null=True, blank=True, default=None, on_delete=CASCADE, verbose_name='Horario')
    laboratory = ForeignKey(Laboratory, on_delete=CASCADE, verbose_name='Laboratorio')
    equipment = ForeignKey(EquipmentGeneral, null=True, blank=True, default=None, on_delete=CASCADE, verbose_name='Equipo')
+   program = ForeignKey(Program, null=True, blank=True, default=None, on_delete=CASCADE, verbose_name='Programa')
 
    def __str__(self):
       return f'{self.teacher} - {self.schedule}'

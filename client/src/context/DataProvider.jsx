@@ -43,7 +43,7 @@ const DataProvider = ({ children }) => {
 		return () => controller.abort()
 	}, [])
 
-	const entryAlumnPractice = async ({ enrollment, equipment, schedule, laboratory=1, program }) => {
+	const entryAlumnPractice = async ({ enrollment, equipment, schedule=null, laboratory=1, program }) => {
 		try {
 			const response = await serverApi.post('/api/v1/alumns/practices/', {
 				enrollment, equipment: equipment == 'propio' ? null : equipment, schedule, laboratory, program
@@ -79,7 +79,7 @@ const DataProvider = ({ children }) => {
 			entry_date: params.entry_date,
 			exit_date: new Date(),
 			equipment: params.equipment == 'Equipo propio' ? null : params.equipment.id,
-			schedule: params.schedule.id,
+			schedule: params.schedule == null ? null : params.schedule.id,
 			laboratory: params.laboratory.id,
 			program: params.program.id,
 		})
@@ -115,24 +115,23 @@ const DataProvider = ({ children }) => {
 		}
 	}
 
-	const entryTeacherPractice = async ({ description, equipment = null, laboratory = 1, schedule, teacher }) => {
+	const entryTeacherPractice = async ({ description=null, equipment=null, laboratory=1, schedule=null, program=null, teacher }) => {
 		try {
 			const response = await serverApi.post('/api/v1/teachers/practices/', {
-				description, equipment, laboratory, schedule, teacher
+				description, laboratory, schedule, teacher, program, equipment: equipment == 'propio' ? null : equipment,
 			})
-			if (response.status == 201) {
-				setData((currentData) => ({
-					...currentData,
-					scheduleActive: currentData.schedule.filter(item => item.id == schedule),
-					teacherPractices: [response.data.data, ...currentData.teacherPractices]
-				}))
-				setMessage({
-					message: response.data.message,
-					severity: "success",
-					open: true,
-				})
-				setTimeout(() => { setMessage({}) }, 5000)
-			}
+
+			setData((currentData) => ({
+				...currentData,
+				scheduleActive: schedule == null ? currentData.scheduleActive : currentData.schedule.filter(item => item.id == schedule),
+				teacherPractices: [response.data.data, ...currentData.teacherPractices],
+				equipments: currentData.equipments.filter(item => item.id != equipment)
+			}))
+			setMessage({
+				message: response.data.message,
+				severity: "success",
+				open: true,
+			})
 			return response.data
 		} catch (error) {
 			setMessage({
@@ -140,29 +139,31 @@ const DataProvider = ({ children }) => {
 				severity: "warning",
 				open: true,
 			})
-			setTimeout(() => { setMessage({}) }, 5000)
 			return error.response.data
+		} finally {
+			setTimeout(() => { setMessage({}) }, 5000)
 		}
-		
-		
-		
 	}
+
 	const exitTeacherPractice = async (params) => {
-		const response = await serverApi.put(`/api/v1/teachers/practices/${params.id}/`, {
-			teacher: params.teacher.id,
-			entry_date: params.entry_date,
-			exit_date: new Date(),
-			description: params.description,
-			schedule: params.schedule.id,
-			laboratory: params.laboratory.id,
-			equipment: params.equipment == 'Equipo propio' ? null : params.equipment.id,
-		})
-		if (response.status == 200) {
+		try {
+			const response = await serverApi.put(`/api/v1/teachers/practices/${params.id}/`, {
+				teacher: params.teacher.id,
+				entry_date: params.entry_date,
+				exit_date: new Date(),
+				description: params.description,
+				schedule: params.schedule == null ? null : params.schedule.id,
+				laboratory: params.laboratory.id,
+				equipment: params.equipment == 'Equipo propio' ? null : params.equipment.id,
+				program: params.program === null ? null : params.program.id,
+			})
+
 			const date = new Date()
 			const [hour, minutes, seconds] = [date.getHours(), date.getMinutes(), date.getSeconds()]
 			setData((currentData) => ({
 				...currentData,
-				scheduleActive: [],
+				scheduleActive: params.schedule == null ? currentData.scheduleActive: [],
+				equipments: params.equipment != 'Equipo propio' ? [params.equipment, ...currentData.equipments] : currentData.equipments,
 				teacherPractices: currentData.teacherPractices.map(item => {
 					if (item.id == params.id) {
 						return {...item, exit_date: `${hour}:${minutes}:${seconds}`}
@@ -176,13 +177,18 @@ const DataProvider = ({ children }) => {
 				severity: "success",
 				open: true,
 			})
+			return response.data
+		} catch (error) {
+			setMessage({
+				message: error.response.data.message,
+				severity: "warning",
+				open: true,
+			})
+			return error.response.data
+		} finally {
 			setTimeout(() => { setMessage({}) }, 5000)
 		}
-		return response.data
-		
 	}
-
-
 
 	const contextValue = {
 		...data,

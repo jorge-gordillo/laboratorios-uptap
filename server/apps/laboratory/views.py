@@ -1,4 +1,5 @@
 from datetime import datetime
+from traceback import print_tb
 from django.utils import timezone
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.response import Response
@@ -173,6 +174,7 @@ class TeacherPratcesListView(GenericViewSet):
       return Response(data, status=HTTP_200_OK)
    
    def create(self, request):
+      print(request.data)
       pratice_serializer = self.serializer_class(data=request.data)
       if pratice_serializer.is_valid():
          EquipmentGeneral.objects.filter(id=request.data['equipment']).update(status=2)
@@ -183,7 +185,6 @@ class TeacherPratcesListView(GenericViewSet):
             'message': 'Registro creado correctamente',
             'data': pratice_serializer.data,
          }, status=HTTP_201_CREATED)
-
       return Response({
          'status': 400,
          'messgge': 'Error al registrar la entrada',
@@ -207,13 +208,13 @@ class TeacherPratcesListView(GenericViewSet):
       if serializer.is_valid():
          EquipmentGeneral.objects.filter(id=request.data['equipment']).update(status=1)
          Schedule.objects.filter(id=request.data['schedule']).update(status=1)
-         serializer.save()       
+         serializer.save()
+         print(serializer.data)
          return Response({
             'status': 200,
             'message': 'Registro actualizado correctamente!',
             'data': None,
          }, status=HTTP_200_OK) 
-      print('error aquiii')    
       return Response({
          'status': 400,
          'message': 'Error al actualizar el registro',

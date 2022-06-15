@@ -14,9 +14,10 @@ ALLOWED_HOSTS = [
     "labs-uptap.web.app",
     "labs-uptap.firebaseapp.com",
     "192.168.182.180",
-    "127.0.0.1",
     "192.168.207.180",
+    "127.0.0.1",
     "192.168.0.254",
+    "localhost",
     "arcane-beyond-98951.herokuapp.com",
 ]
 
@@ -26,6 +27,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://192.168.182.180",
     "http://192.168.207.180",
     "http://192.168.0.254",
+    "http://127.0.0.1",
+    "http://localhost",
     "https://arcane-beyond-98951.herokuapp.com",
 ]
 
@@ -36,6 +39,8 @@ CORS_ALLOWED_ORIGIN_REGEXES = [
     "192.168.182.180",
     "192.168.207.180",
     "192.168.0.254",
+    "127.0.0.1",
+    "localhost",
 ]
 
 # Application definition

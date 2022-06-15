@@ -4,5 +4,5 @@ from apps.alumn.models import Alumn
 
 @register(Alumn)
 class AlumAdmin(ModelAdmin):
-   list_display = ('enrollment', '__str__', 'gender', 'email')
-   list_filter = ('gender',)
+   list_display = ('enrollment', 'name')
+   search_fields= ('name',)

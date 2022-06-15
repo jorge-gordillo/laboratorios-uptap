@@ -4,17 +4,16 @@ import DataGrid from '../../../components/DataGrid'
 import { Button } from "@mui/material"
 
 const TablePratices = () => {
-	const { teacherPractices, exitTeacherPractice, loading } = useData()
+   const { teacherPractices, exitTeacherPractice, loading } = useData()
 	
 	const handleExit = async (params) => {
-	 	await exitTeacherPractice(params)
-	}
+	   await exitTeacherPractice(params)
+   }
 
    const columns = useMemo(() => [
 		{ field: "teacher", headerName: "Docente", minWidth: 240, valueGetter: ({ row }) => `${row.teacher.name}` },
-		{ field: "description", headerName: "Descripción", minWidth: 280 },
-		{ field: "group", headerName: "Grupo", minWidth: 150 },
-		{ field: "subject", headerName: "Materia", minWidth: 250, valueGetter: ({ row }) => `${row.schedule.name}` },
+      { field: "equipment", headerName: "Equipo", minWidth: 130, valueGetter: ({ row }) => row.equipment == 'Equipo propio' ? `${row.equipment}` : `${row.equipment.number}` },
+		{ field: "program", headerName: "Programa", minWidth: 220, valueGetter: ({ row }) => `${row.program.name}` },
 		{ field: "entry_date", headerName: "Hora de Entrada", minWidth: 120 },
 		{ field: "exit_date", headerName: "Hora de Salida", minWidth: 120 },
 		{ field: "actions", headerName: 'Acciones', type: "actions",
@@ -30,13 +29,13 @@ const TablePratices = () => {
 			]
 		}
 	])
-
+   
    return (
       <div style={{ display: 'flex' }}>
          <div style={{ flexGrow: 1 }}>
             <DataGrid
                sx={{ mt: 2, mr:2 }}
-               rows={teacherPractices?.filter(item => item.schedule !== null) ?? []}
+               rows={teacherPractices?.filter(item => item.schedule === null) ?? []}
 					columns={columns}
 					loading={loading}
             />

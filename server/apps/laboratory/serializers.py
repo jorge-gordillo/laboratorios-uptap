@@ -57,10 +57,10 @@ class AlumnoPracticaSerializer(ModelSerializer):
             'name': instance.program.desciption,
          },
          'enrollment': instance.enrollment.enrollment,
-         'name': f'{instance.enrollment.first_name} {instance.enrollment.last_name} {instance.enrollment.second_last_name}' ,
+         'name': f'{instance.enrollment.name}' ,
          'entry_date': instance.entry_date if instance.entry_date == None else instance.entry_date.strftime("%H:%M:%S"),
          'exit_date': instance.exit_date if instance.exit_date == None else instance.exit_date.strftime("%H:%M:%S"),
-         'schedule': {
+         'schedule': None if instance.schedule == None else {
             'id': instance.schedule.subject.id,
             'name': instance.schedule.subject.name,
          }, 
@@ -90,10 +90,10 @@ class TeacherPratcesSerializer(ModelSerializer):
          'description': instance.description,
          'entry_date': instance.entry_date if instance.entry_date == None else instance.entry_date.strftime("%H:%M:%S"),
          'exit_date': instance.exit_date if instance.exit_date == None else instance.exit_date.strftime("%H:%M:%S"),
-         'group': instance.schedule.group.__str__(),
-         'schedule': {
+         'group': instance.schedule.group.__str__() if not instance.schedule == None else None,
+         'schedule': None if instance.schedule == None else {
             'id': instance.schedule.id,
-            'subject': instance.schedule.subject.name,
+            'name': instance.schedule.subject.name,
          },
          'equipment': 'Equipo propio' if instance.equipment == None else {
             'id': instance.equipment.id,
@@ -102,6 +102,10 @@ class TeacherPratcesSerializer(ModelSerializer):
          'laboratory': {
             'id': instance.laboratory.id,
             'name': instance.laboratory.name
+         },
+         'program': None if instance.program == None else {
+            'id': instance.program.id,
+            'name': instance.program.desciption,
          },
       }
 
