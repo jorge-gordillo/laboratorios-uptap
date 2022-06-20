@@ -1,8 +1,6 @@
 Django==3.2.9
 djangorestframework
 django-jazzmin
-gunicorn
-django-heroku
 drf_yasg
 django-cors-headers
 psycopg2-binary
